@@ -91,9 +91,36 @@
                 <div class="d-flex">
                     <label class="me-2 pt-1">Sort by:</label>
                     <select class="form-select" id="sort-select" onchange="window.location.href=this.value">
-                        <option value="{{ url_for('product_listing', **filters, sort='newest') }}" {% if sort == 'newest' %}selected{% endif %}>Newest</option>
-                        <option value="{{ url_for('product_listing', **filters, sort='price_low') }}" {% if sort == 'price_low' %}selected{% endif %}>Price: Low to High</option>
-                        <option value="{{ url_for('product_listing', **filters, sort='price_high') }}" {% if sort == 'price_high' %}selected{% endif %}>Price: High to Low</option>
+                <option value="{{ url_for('product_listing',
+                          category=filters.category,
+                          brand=filters.brand,
+                          min_price=filters.min_price,
+                          max_price=filters.max_price,
+                          condition=filters.condition,
+                          location=filters.location,
+                          sort='newest') }}"
+        {% if sort == 'newest' %}selected{% endif %}>Newest</option>
+
+            <option value="{{ url_for('product_listing',
+                          category=filters.category,
+                          brand=filters.brand,
+                          min_price=filters.min_price,
+                          max_price=filters.max_price,
+                          condition=filters.condition,
+                          location=filters.location,
+                          sort='price_low') }}"
+        {% if sort == 'price_low' %}selected{% endif %}>Price: Low to High</option>
+
+<option value="{{ url_for('product_listing',
+                          category=filters.category,
+                          brand=filters.brand,
+                          min_price=filters.min_price,
+                          max_price=filters.max_price,
+                          condition=filters.condition,
+                          location=filters.location,
+                          sort='price_high') }}"
+        {% if sort == 'price_high' %}selected{% endif %}>Price: High to Low</option>
+
                     </select>
                 </div>
             </div>
