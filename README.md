@@ -96,10 +96,7 @@ StyleHub is a comprehensive e-commerce platform designed for fashion products. I
 
 ## Usage
 
-### Default Accounts (if using sample data)
-- **Admin**: admin@stylehub.com / admin123
-- **Seller**: seller@stylehub.com / seller123
-- **Buyer**: admin@stylehub.com / buyer123
+
 
 ### Buyer Guide
 1. Register as a buyer or log in with the sample buyer account
