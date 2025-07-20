@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+
+{% block title %}Seller Dashboard | StyleHub{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">Seller Dashboard</h1>
+    
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-md-3 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">{{ user.name }}</h5>
+                </div>
+                <div class="list-group list-group-flush">
+                    <a href="{{ url_for('seller_dashboard') }}" class="list-group-item list-group-item-action active">Dashboard</a>
+                    <a href="{{ url_for('create_product') }}" class="list-group-item list-group-item-action">Add New Product</a>
+                    <a href="{{ url_for('edit_profile') }}" class="list-group-item list-group-item-action">Edit Profile</a>
+                    <a href="{{ url_for('logout') }}" class="list-group-item list-group-item-action text-danger">Logout</a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="col-md-9">
+            <!-- Products Section -->
+            <div class="card mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">My Products</h5>
+                    <a href="{{ url_for('create_product') }}" class="btn btn-primary btn-sm">Add New Product</a>
+                </div>
+                <div class="card-body">
+                    {% if products %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Image</th>
+                                    <th>Title</th>
+                                    <th>Price</th>
+                                    <th>Category</th>
+                                    <th>Date Added</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for product in products %}
+                                <tr>
+                                    <td>
+                                        <img src="{{ url_for('static', filename='uploads/' + product.image) }}" alt="{{ product.title }}" style="width: 50px; height: 50px; object-fit: cover;">
+                                    </td>
+                                    <td><a href="{{ url_for('product_detail', product_id=product.id) }}">{{ product.title }}</a></td>
+                                    <td>${{ product.price }}</td>
+                                    <td>{{ product.category }}</td>
+                                    <td>{{ product.created_at.strftime('%Y-%m-%d') }}</td>
+                                    <td>
+                                        <a href="{{ url_for('edit_product', product_id=product.id) }}" class="btn btn-sm btn-warning me-1">Edit</a>
+                                        <form action="{{ url_for('delete_product', product_id=product.id) }}" method="post" class="d-inline">
+                                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this product?')">Delete</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="alert alert-info">
+                        You haven't added any products yet. <a href="{{ url_for('create_product') }}">Add your first product</a> to start selling.
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Orders Section -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Recent Orders</h5>
+                </div>
+                <div class="card-body">
+                    {% if orders %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Order ID</th>
+                                    <th>Product</th>
+                                    <th>Buyer</th>
+                                    <th>Quantity</th>
+                                    <th>Total</th>
+                                    <th>Status</th>
+                                    <th>Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for order in orders %}
+                                <tr>
+                                    <td>#{{ order.id }}</td>
+                                    <td><a href="{{ url_for('product_detail', product_id=order.product_id) }}">{{ order.title }}</a></td>
+                                    <td>{{ order.buyer_name }}</td>
+                                    <td>{{ order.quantity }}</td>
+                                    <td>${{ order.total_price }}</td>
+                                    <td>
+                                        <span class="badge {% if order.status == 'pending' %}bg-warning{% elif order.status == 'shipped' %}bg-info{% elif order.status == 'delivered' %}bg-success{% elif order.status == 'cancelled' %}bg-danger{% endif %}">
+                                            {{ order.status }}
+                                        </span>
+                                    </td>
+                                    <td>{{ order.created_at.strftime('%Y-%m-%d') }}</td>
+                                    <td>
+                                        <form action="{{ url_for('update_order_status', order_id=order.id) }}" method="post">
+                                            <div class="input-group input-group-sm">
+                                                <select class="form-select form-select-sm" name="status">
+                                                    <option value="pending" {% if order.status == 'pending' %}selected{% endif %}>Pending</option>
+                                                    <option value="shipped" {% if order.status == 'shipped' %}selected{% endif %}>Shipped</option>
+                                                    <option value="delivered" {% if order.status == 'delivered' %}selected{% endif %}>Delivered</option>
+                                                    <option value="cancelled" {% if order.status == 'cancelled' %}selected{% endif %}>Cancelled</option>
+                                                </select>
+                                                <button class="btn btn-outline-secondary" type="submit">Update</button>
+                                            </div>
+                                        </form>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="alert alert-info">
+                        You don't have any orders yet.
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block title %}Buyer Dashboard | StyleHub{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">Buyer Dashboard</h1>
+    
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-md-3 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">{{ user.name }}</h5>
+                </div>
+                <div class="list-group list-group-flush">
+                    <a href="{{ url_for('buyer_dashboard') }}" class="list-group-item list-group-item-action active">My Orders</a>
+                    <a href="{{ url_for('edit_profile') }}" class="list-group-item list-group-item-action">Edit Profile</a>
+                    <a href="{{ url_for('logout') }}" class="list-group-item list-group-item-action text-danger">Logout</a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="col-md-9">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">My Orders</h5>
+                </div>
+                <div class="card-body">
+                    {% if orders %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Order ID</th>
+                                    <th>Product</th>
+                                    <th>Price</th>
+                                    <th>Quantity</th>
+                                    <th>Total</th>
+                                    <th>Status</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for order in orders %}
+                                <tr>
+                                    <td>#{{ order.id }}</td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <img src="{{ url_for('static', filename='uploads/' + order.image) }}" alt="{{ order.title }}" style="width: 50px; height: 50px; object-fit: cover;" class="me-2">
+                                            <a href="{{ url_for('product_detail', product_id=order.product_id) }}">{{ order.title }}</a>
+                                        </div>
+                                    </td>
+                                    <td>${{ order.total_price / order.quantity }}</td>
+                                    <td>{{ order.quantity }}</td>
+                                    <td>${{ order.total_price }}</td>
+                                    <td>
+                                        <span class="badge {% if order.status == 'pending' %}bg-warning{% elif order.status == 'shipped' %}bg-info{% elif order.status == 'delivered' %}bg-success{% elif order.status == 'cancelled' %}bg-danger{% endif %}">
+                                            {{ order.status }}
+                                        </span>
+                                    </td>
+                                    <td>{{ order.created_at.strftime('%Y-%m-%d') }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="alert alert-info">
+                        You haven't placed any orders yet. <a href="{{ url_for('product_listing') }}">Browse products</a> to start shopping.
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

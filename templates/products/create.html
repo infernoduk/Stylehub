@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+{% block title %}Create Product | StyleHub{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">Create New Product</h1>
+    
+    <div class="card">
+        <div class="card-body">
+            <form action="{{ url_for('create_product') }}" method="post" enctype="multipart/form-data">
+                <div class="row">
+                    <!-- Product Title -->
+                    <div class="col-md-6 mb-3">
+                        <label for="title" class="form-label">Title</label>
+                        <input type="text" class="form-control" id="title" name="title" required>
+                    </div>
+                    
+                    <!-- Product Price -->
+                    <div class="col-md-6 mb-3">
+                        <label for="price" class="form-label">Price ($)</label>
+                        <input type="number" class="form-control" id="price" name="price" step="0.01" min="0" required>
+                    </div>
+                    
+                    <!-- Product Category -->
+                    <div class="col-md-6 mb-3">
+                        <label for="category" class="form-label">Category</label>
+                        <select class="form-select" id="category" name="category" required>
+                            <option value="" selected disabled>Select a category</option>
+                            <option value="Clothing">Clothing</option>
+                            <option value="Shoes">Shoes</option>
+                            <option value="Accessories">Accessories</option>
+                            <option value="Bags">Bags</option>
+                            <option value="Jewelry">Jewelry</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Product Brand -->
+                    <div class="col-md-6 mb-3">
+                        <label for="brand" class="form-label">Brand</label>
+                        <input type="text" class="form-control" id="brand" name="brand" required>
+                    </div>
+                    
+                    <!-- Product Condition -->
+                    <div class="col-md-6 mb-3">
+                        <label for="condition" class="form-label">Condition</label>
+                        <select class="form-select" id="condition" name="condition" required>
+                            <option value="" selected disabled>Select condition</option>
+                            <option value="New">New</option>
+                            <option value="Used - Like New">Used - Like New</option>
+                            <option value="Used - Good">Used - Good</option>
+                            <option value="Used - Fair">Used - Fair</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Product Location -->
+                    <div class="col-md-6 mb-3">
+                        <label for="location" class="form-label">Location</label>
+                        <input type="text" class="form-control" id="location" name="location" required>
+                    </div>
+                    
+                    <!-- Product Image -->
+                    <div class="col-md-12 mb-3">
+                        <label for="image" class="form-label">Product Image</label>
+                        <input type="file" class="form-control" id="image" name="image" accept="image/*">
+                        <div class="form-text">Upload a clear image of your product. Max size: 5MB.</div>
+                    </div>
+                    
+                    <!-- Product Description -->
+                    <div class="col-md-12 mb-3">
+                        <label for="description" class="form-label">Description</label>
+                        <textarea class="form-control" id="description" name="description" rows="5" required></textarea>
+                    </div>
+                    
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-primary">Create Product</button>
+                        <a href="{{ url_for('seller_dashboard') }}" class="btn btn-secondary">Cancel</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

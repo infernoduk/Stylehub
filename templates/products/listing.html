@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+
+{% block title %}StyleHub - Products{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <!-- Filters Sidebar -->
+        <div class="col-md-3">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Filters</h5>
+                </div>
+                <div class="card-body">
+                    <form action="{{ url_for('product_listing') }}" method="get">
+                        <!-- Category Filter -->
+                        <div class="mb-3">
+                            <label for="category" class="form-label">Category</label>
+                            <select class="form-select" id="category" name="category">
+                                <option value="">All Categories</option>
+                                {% for category in categories %}
+                                <option value="{{ category.category }}" {% if filters.category == category.category %}selected{% endif %}>
+                                    {{ category.category }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        
+                        <!-- Brand Filter -->
+                        <div class="mb-3">
+                            <label for="brand" class="form-label">Brand</label>
+                            <select class="form-select" id="brand" name="brand">
+                                <option value="">All Brands</option>
+                                {% for brand in brands %}
+                                <option value="{{ brand.brand }}" {% if filters.brand == brand.brand %}selected{% endif %}>
+                                    {{ brand.brand }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        
+                        <!-- Price Range Filter -->
+                        <div class="mb-3">
+                            <label class="form-label">Price Range</label>
+                            <div class="row">
+                                <div class="col-6">
+                                    <input type="number" class="form-control" placeholder="Min" name="min_price" value="{{ filters.min_price }}">
+                                </div>
+                                <div class="col-6">
+                                    <input type="number" class="form-control" placeholder="Max" name="max_price" value="{{ filters.max_price }}">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Condition Filter -->
+                        <div class="mb-3">
+                            <label for="condition" class="form-label">Condition</label>
+                            <select class="form-select" id="condition" name="condition">
+                                <option value="">All Conditions</option>
+                                {% for condition in conditions %}
+                                <option value="{{ condition.condition }}" {% if filters.condition == condition.condition %}selected{% endif %}>
+                                    {{ condition.condition }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        
+                        <!-- Location Filter -->
+                        <div class="mb-3">
+                            <label for="location" class="form-label">Location</label>
+                            <select class="form-select" id="location" name="location">
+                                <option value="">All Locations</option>
+                                {% for location in locations %}
+                                <option value="{{ location.location }}" {% if filters.location == location.location %}selected{% endif %}>
+                                    {{ location.location }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary w-100">Apply Filters</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Products Grid -->
+        <div class="col-md-9">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2>Products</h2>
+                <div class="d-flex">
+                    <label class="me-2 pt-1">Sort by:</label>
+                    <select class="form-select" id="sort-select" onchange="window.location.href=this.value">
+                        <option value="{{ url_for('product_listing', **filters, sort='newest') }}" {% if sort == 'newest' %}selected{% endif %}>Newest</option>
+                        <option value="{{ url_for('product_listing', **filters, sort='price_low') }}" {% if sort == 'price_low' %}selected{% endif %}>Price: Low to High</option>
+                        <option value="{{ url_for('product_listing', **filters, sort='price_high') }}" {% if sort == 'price_high' %}selected{% endif %}>Price: High to Low</option>
+                    </select>
+                </div>
+            </div>
+            
+            {% if products %}
+            <div class="row">
+                {% for product in products %}
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        <img src="{{ url_for('static', filename='uploads/' + product.image) }}" class="card-img-top" alt="{{ product.title }}">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ product.title }}</h5>
+                            <p class="card-text">${{ product.price }}</p>
+                            <p class="card-text"><small class="text-muted">{{ product.category }} | {{ product.brand }}</small></p>
+                            <a href="{{ url_for('product_detail', product_id=product.id) }}" class="btn btn-primary">View Details</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="alert alert-info">
+                No products found matching your criteria. Try adjusting your filters.
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

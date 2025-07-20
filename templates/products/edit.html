@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit Product | StyleHub{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">Edit Product</h1>
+    
+    <div class="card">
+        <div class="card-body">
+            <form action="{{ url_for('edit_product', product_id=product.id) }}" method="post" enctype="multipart/form-data">
+                <div class="row">
+                    <!-- Product Title -->
+                    <div class="col-md-6 mb-3">
+                        <label for="title" class="form-label">Title</label>
+                        <input type="text" class="form-control" id="title" name="title" value="{{ product.title }}" required>
+                    </div>
+                    
+                    <!-- Product Price -->
+                    <div class="col-md-6 mb-3">
+                        <label for="price" class="form-label">Price ($)</label>
+                        <input type="number" class="form-control" id="price" name="price" step="0.01" min="0" value="{{ product.price }}" required>
+                    </div>
+                    
+                    <!-- Product Category -->
+                    <div class="col-md-6 mb-3">
+                        <label for="category" class="form-label">Category</label>
+                        <select class="form-select" id="category" name="category" required>
+                            <option value="" disabled>Select a category</option>
+                            <option value="Clothing" {% if product.category == 'Clothing' %}selected{% endif %}>Clothing</option>
+                            <option value="Shoes" {% if product.category == 'Shoes' %}selected{% endif %}>Shoes</option>
+                            <option value="Accessories" {% if product.category == 'Accessories' %}selected{% endif %}>Accessories</option>
+                            <option value="Bags" {% if product.category == 'Bags' %}selected{% endif %}>Bags</option>
+                            <option value="Jewelry" {% if product.category == 'Jewelry' %}selected{% endif %}>Jewelry</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Product Brand -->
+                    <div class="col-md-6 mb-3">
+                        <label for="brand" class="form-label">Brand</label>
+                        <input type="text" class="form-control" id="brand" name="brand" value="{{ product.brand }}" required>
+                    </div>
+                    
+                    <!-- Product Condition -->
+                    <div class="col-md-6 mb-3">
+                        <label for="condition" class="form-label">Condition</label>
+                        <select class="form-select" id="condition" name="condition" required>
+                            <option value="" disabled>Select condition</option>
+                            <option value="New" {% if product.condition == 'New' %}selected{% endif %}>New</option>
+                            <option value="Used - Like New" {% if product.condition == 'Used - Like New' %}selected{% endif %}>Used - Like New</option>
+                            <option value="Used - Good" {% if product.condition == 'Used - Good' %}selected{% endif %}>Used - Good</option>
+                            <option value="Used - Fair" {% if product.condition == 'Used - Fair' %}selected{% endif %}>Used - Fair</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Product Location -->
+                    <div class="col-md-6 mb-3">
+                        <label for="location" class="form-label">Location</label>
+                        <input type="text" class="form-control" id="location" name="location" value="{{ product.location }}" required>
+                    </div>
+                    
+                    <!-- Current Product Image -->
+                    <div class="col-md-12 mb-3">
+                        <label class="form-label">Current Image</label>
+                        <div>
+                            <img src="{{ url_for('static', filename='uploads/' + product.image) }}" alt="{{ product.title }}" style="max-height: 200px; max-width: 100%;" class="img-thumbnail">
+                        </div>
+                    </div>
+                    
+                    <!-- Product Image Upload -->
+                    <div class="col-md-12 mb-3">
+                        <label for="image" class="form-label">Change Image (optional)</label>
+                        <input type="file" class="form-control" id="image" name="image" accept="image/*">
+                        <div class="form-text">Upload a new image only if you want to change the current one. Max size: 5MB.</div>
+                    </div>
+                    
+                    <!-- Product Description -->
+                    <div class="col-md-12 mb-3">
+                        <label for="description" class="form-label">Description</label>
+                        <textarea class="form-control" id="description" name="description" rows="5" required>{{ product.description }}</textarea>
+                    </div>
+                    
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-primary">Update Product</button>
+                        <a href="{{ url_for('product_detail', product_id=product.id) }}" class="btn btn-secondary">Cancel</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
