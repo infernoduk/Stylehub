@@ -17,7 +17,6 @@ CREATE TABLE users (
 CREATE TABLE products (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     seller_id INTEGER NOT NULL,
-    name TEXT NOT NULL,
     description TEXT NOT NULL,
     price REAL NOT NULL,
     category TEXT NOT NULL,
