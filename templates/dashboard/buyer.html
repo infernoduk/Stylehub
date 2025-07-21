@@ -52,9 +52,9 @@
                                             <a href="{{ url_for('product_detail', product_id=order.product_id) }}">{{ order.title }}</a>
                                         </div>
                                     </td>
-                                    <td>${{ order.total_price / order.quantity }}</td>
-                                    <td>{{ order.quantity }}</td>
-                                    <td>${{ order.total_price }}</td>
+                                    <td>${{ order.price }}</td>
+                                    <td>1</td>
+                                    <td>${{ order.price }}</td>
                                     <td>
                                         <span class="badge {% if order.status == 'pending' %}bg-warning{% elif order.status == 'shipped' %}bg-info{% elif order.status == 'delivered' %}bg-success{% elif order.status == 'cancelled' %}bg-danger{% endif %}">
                                             {{ order.status }}

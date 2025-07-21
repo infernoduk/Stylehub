@@ -594,8 +594,8 @@ def buy_product(product_id):
     if conn is not None:
         cursor = conn.cursor()
         cursor.execute(
-            'INSERT INTO orders (product_id, buyer_id, quantity, total_price, status, created_at) VALUES (%s, %s, %s, %s, %s, %s)',
-            (product_id, session['user_id'], quantity, total_price, 'pending', datetime.now())
+            'INSERT INTO orders (product_id, buyer_id, seller_id, price, status, created_at) VALUES (%s, %s, %s, %s, %s, %s)',
+            (product_id, session['user_id'], product['seller_id'], total_price, 'pending', datetime.now())
         )
         conn.commit()
         cursor.close()
@@ -756,7 +756,7 @@ def seed_db_command():
     locations = ['New York', 'Los Angeles', 'Chicago', 'Miami', 'Dallas']
     
     cursor.execute('SELECT id FROM users WHERE email = %s', ('seller@stylehub.com',))
-    seller_id = cursor.fetchone()[0]
+    seller_id = cursor.fetchone()['id']
     
     for i in range(20):
         title = f"Product {i+1}"
