@@ -130,16 +130,30 @@
                 {% for product in products %}
                 <div class="col-md-4 mb-4">
                     <div class="card h-100">
-                        <img src="{{ url_for('static', filename='uploads/' + product.image) }}" class="card-img-top" alt="{{ product.title }}">
+                        <img src="{{ product.image if product.image and product.image.startswith('http') else url_for('static', filename='uploads/' + (product.image if product.image else 'default.jpg')) }}" class="card-img-top" alt="{{ product.title }}">
                         <div class="card-body">
                             <h5 class="card-title">{{ product.title }}</h5>
-                            <p class="card-text">${{ product.price }}</p>
+                            <p class="card-text">Ksh {{ '%.2f'|format(product.price) }}</p>
                             <p class="card-text"><small class="text-muted">{{ product.category }} | {{ product.brand }}</small></p>
+                            {% if session.user_id and session.user_type == 'buyer' %}
+                            <form action="{{ url_for('add_to_cart', product_id=product.id) }}" method="post" style="display:inline-block;">
+                                <button type="submit" class="btn btn-primary btn-sm">Add to Cart</button>
+                            </form>
+                            {% endif %}
                             <a href="{{ url_for('product_detail', product_id=product.id) }}" class="btn btn-primary">View Details</a>
                         </div>
                     </div>
                 </div>
                 {% endfor %}
+            </div>
+            <!-- Pagination Controls -->
+            <div class="d-flex justify-content-center my-4">
+                {% if prev_page_url %}
+                <a href="{{ prev_page_url }}" class="btn btn-outline-primary me-2">Previous</a>
+                {% endif %}
+                {% if next_page_url %}
+                <a href="{{ next_page_url }}" class="btn btn-outline-primary">Next</a>
+                {% endif %}
             </div>
             {% else %}
             <div class="alert alert-info">

@@ -14,7 +14,15 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     
-    {% block extra_css %}{% endblock %}
+    {% block extra_css %}
+<style>
+.toast {
+    opacity: 0.98;
+    font-size: 1.05rem;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.12);
+}
+</style>
+{% endblock %}
 </head>
 <body>
     <!-- Navigation -->
@@ -33,6 +41,11 @@
                         <a class="nav-link" href="{{ url_for('product_listing') }}">Products</a>
                     </li>
                 </ul>
+                <!-- Product Search Form -->
+                <form class="d-flex me-3" action="{{ url_for('product_listing') }}" method="get" role="search">
+                    <input class="form-control me-2" type="search" name="q" placeholder="Search products..." aria-label="Search">
+                    <button class="btn btn-outline-light" type="submit"><i class="fas fa-search"></i></button>
+                </form>
                 <ul class="navbar-nav">
                     {% if session.user_id %}
                         {% if session.user_type == 'admin' %}
@@ -46,6 +59,11 @@
                         {% elif session.user_type == 'buyer' %}
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url_for('buyer_dashboard') }}">My Orders</a>
+                        </li>
+                        {% endif %}
+                        {% if session.user_id and session.user_type == 'buyer' %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('view_cart') }}">Cart</a>
                         </li>
                         {% endif %}
                         <li class="nav-item">
@@ -64,15 +82,19 @@
         </div>
     </nav>
     
-    <!-- Flash Messages -->
-    <div class="container mt-3">
+    <!-- Flash Messages as Toasts -->
+    <div aria-live="polite" aria-atomic="true" class="position-fixed top-0 end-0 p-3" style="z-index: 1080; min-width: 320px;">
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 {% for category, message in messages %}
-                    <div class="alert alert-{{ category if category != 'message' else 'info' }} alert-dismissible fade show" role="alert">
-                        {{ message }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                <div class="toast align-items-center text-white bg-{{ 'success' if category == 'success' else 'danger' if category == 'error' else 'info' }} border-0 mb-2" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="4000">
+                    <div class="d-flex">
+                        <div class="toast-body">
+                            {{ message }}
+                        </div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
                     </div>
+                </div>
                 {% endfor %}
             {% endif %}
         {% endwith %}
@@ -122,6 +144,16 @@
     <!-- Custom JavaScript -->
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
     
-    {% block extra_js %}{% endblock %}
+    {% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var toastElList = [].slice.call(document.querySelectorAll('.toast'));
+    toastElList.forEach(function(toastEl) {
+        var toast = new bootstrap.Toast(toastEl);
+        toast.show();
+    });
+});
+</script>
+{% endblock %}
 </body>
 </html>

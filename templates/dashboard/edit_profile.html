@@ -46,6 +46,14 @@
                             <input type="email" class="form-control" id="email" name="email" value="{{ user.email }}" required>
                         </div>
                         
+                        {% if session.user_type == 'seller' %}
+                        <div class="mb-3">
+                            <label for="mpesa_phone" class="form-label">M-Pesa Phone Number</label>
+                            <input type="text" class="form-control" id="mpesa_phone" name="mpesa_phone" value="{{ user.mpesa_phone or '' }}" placeholder="e.g. 0712345678">
+                            <small class="form-text text-muted">This number will be used for payouts.</small>
+                        </div>
+                        {% endif %}
+                        
                         <div class="mb-3">
                             <label class="form-label">Account Type</label>
                             <input type="text" class="form-control" value="{{ user.user_type|capitalize }}" readonly>

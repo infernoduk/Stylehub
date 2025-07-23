@@ -15,27 +15,20 @@
     <div class="row">
         <!-- Product Image -->
         <div class="col-md-6 mb-4">
-            <img src="{{ url_for('static', filename='uploads/' + product.image) }}" class="img-fluid rounded" alt="{{ product.title }}">
+            <img src="{{ product.image if product.image and product.image.startswith('http') else url_for('static', filename='uploads/' + (product.image if product.image else 'default.jpg')) }}" alt="{{ product.title }}" class="img-fluid">
         </div>
         
         <!-- Product Details -->
         <div class="col-md-6">
-            <h1 class="mb-3">{{ product.title }}</h1>
-            <h3 class="text-primary mb-4">${{ product.price }}</h3>
-            
-            <div class="mb-4">
-                <p><strong>Category:</strong> {{ product.category }}</p>
-                <p><strong>Brand:</strong> {{ product.brand }}</p>
-                <p><strong>Condition:</strong> {{ product.condition }}</p>
-                <p><strong>Location:</strong> {{ product.location }}</p>
-                <p><strong>Seller:</strong> {{ seller.name }}</p>
-                <p><strong>Listed on:</strong> {{ product.created_at.strftime('%B %d, %Y') }}</p>
-            </div>
-            
-            <div class="mb-4">
-                <h4>Description</h4>
-                <p>{{ product.description }}</p>
-            </div>
+            <h2>{{ product.title }}</h2>
+            <p>{{ product.description }}</p>
+            <p><strong>Price:</strong> Ksh {{ '%.2f'|format(product.price) }}</p>
+            <p><strong>Category:</strong> {{ product.category }}</p>
+            <p><strong>Brand:</strong> {{ product.brand }}</p>
+            <p><strong>Condition:</strong> {{ product.condition }}</p>
+            <p><strong>Location:</strong> {{ product.location }}</p>
+            <p><strong>Seller:</strong> {{ seller.name }}</p>
+            <p><strong>Listed on:</strong> {{ product.created_at.strftime('%B %d, %Y') }}</p>
             
             {% if session.user_id and session.user_type == 'buyer' %}
             <form action="{{ url_for('buy_product', product_id=product.id) }}" method="post">
@@ -59,6 +52,12 @@
                 </form>
             </div>
             {% endif %}
+
+            {% if session.user_id and session.user_type == 'buyer' %}
+            <form action="{{ url_for('add_to_cart', product_id=product.id) }}" method="post" style="margin-top:1em;">
+                <button type="submit" class="btn btn-primary">Add to Cart</button>
+            </form>
+            {% endif %}
         </div>
     </div>
     
@@ -70,10 +69,10 @@
             {% for related in related_products %}
             <div class="col-md-3 mb-4">
                 <div class="card h-100">
-                    <img src="{{ url_for('static', filename='uploads/' + related.image) }}" class="card-img-top" alt="{{ related.title }}">
+                    <img src="{{ related.image if related.image and related.image.startswith('http') else url_for('static', filename='uploads/' + (related.image if related.image else 'default.jpg')) }}" class="card-img-top" alt="{{ related.title }}">
                     <div class="card-body">
                         <h5 class="card-title">{{ related.title }}</h5>
-                        <p class="card-text">${{ related.price }}</p>
+                        <p class="card-text">Ksh {{ '%.2f'|format(related.price) }}</p>
                         <a href="{{ url_for('product_detail', product_id=related.id) }}" class="btn btn-primary">View Details</a>
                     </div>
                 </div>
@@ -82,5 +81,6 @@
         </div>
     </div>
     {% endif %}
+
 </div>
 {% endblock %}
